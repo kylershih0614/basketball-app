@@ -1,14 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
-    <title>My Website</title>
+  <meta charset="UTF-8">
+  <title>Jokić Stats</title>
 </head>
 <body>
-    <h1>Welcome to My Website</h1>
-    <button id="myButton">Click Me!</button>
-    <script src="script.js"></script>
+  <h1>THIS IS THE TITLE </h1>
+  <table border="1" id="stats-table"></table>
+
+  <script>
+    fetch("http://localhost:5000/api/jokic/games/2024-25")
+      .then(response => response.json())
+      .then(data => {
+        const table = document.getElementById("stats-table");
+
+        // Create table headers
+        const headers = Object.keys(data[0]);
+        let headerRow = "<tr>";
+        headers.forEach(h => headerRow += `<th>${h}</th>`);
+        headerRow += "</tr>";
+        table.innerHTML += headerRow;
+
+        // Fill table rows
+        data.forEach(row => {
+          let rowHTML = "<tr>";
+          headers.forEach(h => rowHTML += `<td>${row[h]}</td>`);
+          rowHTML += "</tr>";
+          table.innerHTML += rowHTML;
+        });
+      })
+      .catch(error => console.error("Error loading stats:", error));
+  </script>
 </body>
 </html>
