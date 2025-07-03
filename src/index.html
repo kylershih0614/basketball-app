@@ -1,35 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Jokić Stats</title>
+  <meta charset="UTF-8" />
+  <title>NBA Player Game Logs</title>
 </head>
 <body>
-  <h1>THIS IS THE TITLE </h1>
-  <table border="1" id="stats-table"></table>
+  <h1>NBA Player Game Logs</h1>
+
+  <!-- --- controls --- -->
+  <label for="player-input">Player name:</label>
+  <input id="player-input"  type="text" placeholder="e.g. LeBron James">
+
+  <label for="season-input">Season:</label>
+  <input id="season-input"  type="text" value="2024-25" size="7">
+
+  <button id="load-btn">Load stats</button>
+  <span id="error" style="color:#c00; margin-left:1em;"></span>
+
+  <!-- --- results --- -->
+  <table border="1" id="stats-table" style="margin-top:1rem;"></table>
 
   <script>
-    fetch("http://localhost:5000/api/jokic/games/2024-25")
-      .then(response => response.json())
-      .then(data => {
-        const table = document.getElementById("stats-table");
+    const $btn      = document.getElementById('load-btn');
+    const $name     = document.getElementById('player-input');
+    const $season   = document.getElementById('season-input');
+    const $table    = document.getElementById('stats-table');
+    const $error    = document.getElementById('error');
 
-        // Create table headers
-        const headers = Object.keys(data[0]);
-        let headerRow = "<tr>";
-        headers.forEach(h => headerRow += `<th>${h}</th>`);
-        headerRow += "</tr>";
-        table.innerHTML += headerRow;
+    $btn.addEventListener('click', async () => {
+      $error.textContent = '';
+      $table.innerHTML   = '';
 
-        // Fill table rows
-        data.forEach(row => {
-          let rowHTML = "<tr>";
-          headers.forEach(h => rowHTML += `<td>${row[h]}</td>`);
-          rowHTML += "</tr>";
-          table.innerHTML += rowHTML;
-        });
-      })
-      .catch(error => console.error("Error loading stats:", error));
+      const name   = $name.value.trim();
+      const season = $season.value.trim() || '2024-25';
+      if (!name) { $error.textContent = 'Please enter a player name.'; return; }
+
+      try {
+        const res  = await fetch(`http://localhost:5000/api/player/games?` +
+                                 `name=${encodeURIComponent(name)}` +
+                                 `&season=${encodeURIComponent(season)}`);
+        const data = await res.json();
+        if (!res.ok) { throw new Error(data.error || res.statusText); }
+        if (!data.length) { $error.textContent = 'No data returned.'; return; }
+
+        // -- build table headers once --
+        const headers =  ["GAME_DATE", "MATCHUP", "PTS", "REB", "AST", "PLUS_MINUS"];
+        $table.innerHTML =
+          '<tr>' + headers.map(h => `<th>${h}</th>`).join('') + '</tr>';
+
+        // -- build rows --
+        for (const row of data) {
+          $table.insertAdjacentHTML(
+            'beforeend',
+            '<tr>' + headers.map(h => `<td>${row[h]}</td>`).join('') + '</tr>'
+          );
+        }
+      } catch (err) {
+        $error.textContent = err.message;
+      }
+    });
   </script>
 </body>
 </html>
