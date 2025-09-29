@@ -5,6 +5,56 @@
   <title>NBA Player Game Logs</title>
 </head>
 <body>
+  <hr>
+<h2>Predict Matchup</h2>
+
+<label for="homeTeam">Home Team</label>
+<input list="teamList" id="homeTeam" placeholder="Los Angeles Lakers">
+
+<label for="awayTeam">Away Team</label>
+<input list="teamList" id="awayTeam" placeholder="Boston Celtics">
+
+<datalist id="teamList"></datalist>
+
+<button id="predictBtn">Predict</button>
+<p id="matchupResult"></p>
+
+<script>
+// Populate team list
+(async () => {
+  const res = await fetch('http://127.0.0.1:5000/api/teams');
+  const data = await res.json();
+  const dl = document.getElementById('teamList');
+  (data.teams || []).forEach(t => {
+    const o = document.createElement('option');
+    o.value = t;
+    dl.appendChild(o);
+  });
+})();
+
+document.getElementById('predictBtn').addEventListener('click', async () => {
+  const home = document.getElementById('homeTeam').value.trim();
+  const away = document.getElementById('awayTeam').value.trim();
+  if (!home || !away) {
+    document.getElementById('matchupResult').textContent = "Pick both teams.";
+    return;
+  }
+  const body = { home_team: home, away_team: away }; // you can add date if you want
+  const res = await fetch('http://127.0.0.1:5000/api/predict/matchup', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  const j = await res.json();
+  if (res.ok) {
+    document.getElementById('matchupResult').textContent =
+      `Home win probability: ${(j.home_win_prob * 100).toFixed(1)}%`;
+  } else {
+    document.getElementById('matchupResult').textContent = `Error: ${j.error || 'Unknown'}`;
+  }
+});
+</script>
+
   <h1>NBA Player Game Logs</h1>
 
   <!-- --- controls --- -->
