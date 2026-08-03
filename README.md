@@ -1,43 +1,72 @@
-# My Website
+# 🏀 NBA Game Predictor
 
-This project is a simple website that includes a button for user interaction. Below are the details on how to set up and run the website.
+A machine learning API that computes win probabilities for NBA matchups using historical player and team statistics, with a JavaScript frontend for live matchup display.
+
+## Tech Stack
+
+- **Python** — core ML pipeline and API logic
+- **Flask** — REST API and endpoint routing
+- **Pandas / NumPy** — data ingestion, cleaning, and feature standardization
+- **scikit-learn** — model training and serialization
+- **JavaScript / HTML / CSS** — frontend client for live matchups
 
 ## Project Structure
 
-```
-my-website
-├── src
-│   ├── index.html       # Main HTML document
-│   ├── styles.css       # CSS styles for the website
-│   └── script.js        # JavaScript functionality
-└── README.md            # Project documentation
-```
+basketball-app/
+├── src/
+│ ├── api_basketball/
+│ │ ├── data/
+│ │ │ ├── raw/
+│ │ │ │ └── games.csv # Raw NBA game records
+│ │ │ └── processed/
+│ │ │ └── game_features.csv # Cleaned, model-ready data
+│ │ ├── models/game_outcome/
+│ │ │ ├── model.pkl # Trained model
+│ │ │ ├── features.json # Feature definitions
+│ │ │ └── metrics.json # Model performance metrics
+│ │ ├── api/ # Flask route definitions
+│ │ └── main.py # App entry point
+│ ├── index.html # Frontend UI
+│ ├── script.js # Frontend logic
+│ └── styles.css # Styling
+├── scripts/ # Utility and preprocessing scripts
+├── .vscode/
+└── README.md
 
 ## Getting Started
 
-To get started with this project, follow these steps:
+### Prerequisites
 
-1. **Clone the repository** (if applicable):
-   ```
-   git clone <repository-url>
-   ```
+- Python 3.9+
+- pip
 
-2. **Navigate to the project directory**:
-   ```
-   cd my-website
-   ```
+### Installation
 
-3. **Open the `index.html` file** in your web browser:
-   - You can simply double-click the `index.html` file in the `src` folder or use a local server to serve the files.
+```bash
+git clone https://github.com/kylershih0614/basketball-app.git
+cd basketball-app
+pip install -r requirements.txt
+```
 
-## Features
+### Running the API
 
-- A button that users can click to trigger JavaScript functionality.
+```bash
+python src/api_basketball/main.py
+```
 
-## Customization
+### Running the Frontend
 
-Feel free to modify the `styles.css` file to change the appearance of the website and the button. You can also update the `script.js` file to add more functionality as needed.
+Open `src/index.html` in your browser or serve it with a local server.
 
-## License
+## Data Pipeline
 
-This project is open-source and available for anyone to use and modify.
+Raw game records in `data/raw/games.csv` are processed through a preprocessing pipeline that cleans, standardizes, and engineers features before outputting to `data/processed/game_features.csv` for model training.
+
+## Model
+
+The trained model is serialized to `models/game_outcome/model.pkl`. Feature definitions and performance metrics are stored alongside it in `features.json` and `metrics.json`.
+
+## Author
+
+**Kyler Shih**
+[github.com/kylershih0614](https://github.com/kylershih0614) · [linkedin.com/in/kyler-shih](https://linkedin.com/in/kyler-shih)
