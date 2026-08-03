@@ -12,27 +12,28 @@ A machine learning API that computes win probabilities for NBA matchups using hi
 
 ## Project Structure
 
+```
 basketball-app/
 ├── src/
-│ ├── api_basketball/
-│ │ ├── data/
-│ │ │ ├── raw/
-│ │ │ │ └── games.csv # Raw NBA game records
-│ │ │ └── processed/
-│ │ │ └── game_features.csv # Cleaned, model-ready data
-│ │ ├── models/game_outcome/
-│ │ │ ├── model.pkl # Trained model
-│ │ │ ├── features.json # Feature definitions
-│ │ │ └── metrics.json # Model performance metrics
-│ │ ├── api/ # Flask route definitions
-│ │ └── main.py # App entry point
-│ ├── index.html # Frontend UI
-│ ├── script.js # Frontend logic
-│ └── styles.css # Styling
-├── scripts/ # Utility and preprocessing scripts
+│   ├── api_basketball/
+│   │   ├── data/
+│   │   │   ├── raw/
+│   │   │   │   └── games.csv
+│   │   │   └── processed/
+│   │   │       └── game_features.csv
+│   │   ├── models/game_outcome/
+│   │   │   ├── model.pkl
+│   │   │   ├── features.json
+│   │   │   └── metrics.json
+│   │   ├── api/
+│   │   └── main.py
+│   ├── index.html
+│   ├── script.js
+│   └── styles.css
+├── scripts/
 ├── .vscode/
 └── README.md
-
+```
 ## Getting Started
 
 ### Prerequisites
